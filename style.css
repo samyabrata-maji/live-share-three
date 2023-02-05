@@ -1,3 +1,20 @@
+:root {
+  /* gradient 1 */
+  --textGradColor1: #0b54fe;
+  --textGradColor2: #4743ef;
+  --textGradColor3: #4743ef;
+  --textGradColor4: #c020d0;
+  --textGradColor5: #fc0fc0;
+
+  /* gradient 2 */
+  --textGradColor1: #e31298;
+  --textGradColor2: #1402cb;
+
+  /* gradient 3 */
+  /* --textGradColor1: #f7ff00;
+  --textGradColor2: #00ffdc; */
+}
+
 * {
   margin: 0;
   padding: 0;
@@ -8,21 +25,33 @@ body {
   overflow-x: hidden;
 }
 
-#webgl {
-  width: 100vw;
+div.hero {
+  background-color: #000;
+  min-width: 100vw;
+  min-height: 100vh;
+}
+
+div.hero-grid {
   height: 100%;
+  width: 100vw;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
 }
 
-div {
-  position: absolute;
-  top: 50%;
-  left: 75%;
-  transform: translate(-50%, -50%);
-  z-index: 1000;
+div.hero-canvas {
+  height: 100%;
+  width: 100%;
+}
+div.hero-header-con {
+  height: 100%;
+  width: 100%;
+  background-color: #000;
+  display: flex;
+  align-items: center;
+}
+
+div.hero h1 {
   color: white;
-}
-
-div > h1 {
   font-size: 2rem;
   font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto,
     Oxygen, Ubuntu, Cantarell, "Open Sans", "Helvetica Neue", sans-serif;
@@ -30,10 +59,44 @@ div > h1 {
   cursor: default;
 }
 
-div>h1>span {
-  color: linear-gradient(#6C00FF ,#3C79F5);
+div.hero h1 > span {
+  font-size: 3rem;
+  font-weight: 900;
+  background: -webkit-linear-gradient(
+    -60deg,
+    /* var(--textGradColor1), */ var(--textGradColor1),
+    var(--textGradColor2)
+  );
+  background-clip: text;
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
 }
 
-div > h1:last-child {
-  font-size: 3rem;
+/* ===== Scrollbar CSS ===== */
+/* Firefox */
+* {
+  scrollbar-width: auto;
+  scrollbar-color: #010101 #444857;
+}
+
+/* Chrome, Edge, and Safari */
+*::-webkit-scrollbar {
+  width: 8px;
+}
+
+*::-webkit-scrollbar-track {
+  background: #444857;
+}
+
+*::-webkit-scrollbar-thumb {
+  background-color: #010101;
+  border-radius: 10px;
+  border: 2px solid #3a3636;
+}
+
+.section {
+  top: 100vh;
+  transform: translateY(50%);
+  min-height: 100vh;
+  min-width: 100vw;
 }
