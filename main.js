@@ -1,7 +1,6 @@
 import "./style.css";
 import "gsap";
 import gsap from "gsap";
-import introJs from "intro.js";
 import * as Three from "three";
 import { OrbitControls } from "three/examples/jsm/controls/OrbitControls";
 
