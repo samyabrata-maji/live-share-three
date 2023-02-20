@@ -1,20 +1,3 @@
-:root {
-  /* gradient 1 */
-  --textGradColor1: #0b54fe;
-  --textGradColor2: #4743ef;
-  --textGradColor3: #4743ef;
-  --textGradColor4: #c020d0;
-  --textGradColor5: #fc0fc0;
-
-  /* gradient 2 */
-  --textGradColor1: #e31298;
-  --textGradColor2: #1402cb;
-
-  /* gradient 3 */
-  /* --textGradColor1: #f7ff00;
-  --textGradColor2: #00ffdc; */
-}
-
 * {
   margin: 0;
   padding: 0;
@@ -26,7 +9,6 @@ body {
 }
 
 div.hero {
-  background-color: #000;
   min-width: 100vw;
   min-height: 100vh;
 }
@@ -45,7 +27,6 @@ div.hero-canvas {
 div.hero-header-con {
   height: 100%;
   width: 100%;
-  background-color: #000;
   display: flex;
   align-items: center;
 }
@@ -99,4 +80,8 @@ div.hero h1 > span {
   transform: translateY(50%);
   min-height: 100vh;
   min-width: 100vw;
+}
+
+canvas {
+  background-color: red;
 }

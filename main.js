@@ -1,31 +1,66 @@
 import "./style.css";
 import "gsap";
-import gsap from "gsap";
 import * as Three from "three";
 import { OrbitControls } from "three/examples/jsm/controls/OrbitControls";
 
-let ASPECT = { x: 0.6 * window.innerWidth, y: window.innerHeight };
+const ASPECT = { x: window.innerWidth, y: window.innerHeight };
 
-let scene = new Three.Scene();
+const MIN_CULLING_DIST = 0.01;
 
-let geometry = new Three.SphereGeometry(3, 128, 128);
-let material = new Three.MeshStandardMaterial({
-  roughness: 0.75,
+const EARTH_RADIUS = 3.6;
+const EARTH_POSITION = [-0.2, 0, 0];
+const EARTH_RESOLUTION = [128, 128];
+
+const IS_ZOOMING = false;
+const IS_PANNING = false;
+
+const LIGHT_INTENSITY = 4;
+
+const scene = new Three.Scene();
+
+const textureLoader = new Three.TextureLoader();
+const earthColorMap = textureLoader.load("./textures/earth3.jpg");
+const earthNormalMap = textureLoader.load("./textures/earth_normal.tif");
+const earthSpecMap = textureLoader.load("./textures/earth_spec.tif");
+const cloudColorMap = textureLoader.load("./textures/earth_clouds.jpg");
+
+const sphereGeometry = new Three.SphereGeometry(
+  EARTH_RADIUS,
+  ...EARTH_RESOLUTION
+);
+const sphereMaterial = new Three.MeshStandardMaterial({
+  fog: true,
+  roughness: 1,
+  map: earthColorMap,
+  // aoMap: earthSpecMap
+  // normalMap: earthNormalMap,
+  // normalMapType: Three.ObjectSpaceNormalMap
 });
-let mesh = new Three.Mesh(geometry, material);
-mesh.position.set(-0.2,0,0)
+const mesh = new Three.Mesh(sphereGeometry, sphereMaterial);
+mesh.position.set(...EARTH_POSITION);
 scene.add(mesh);
 
-// lighting
-let hemiLight = new Three.HemisphereLight(0x1402cb, 0xe31298, 1);
-scene.add(hemiLight);
+const cloudsGeometry = new Three.SphereGeometry(
+  EARTH_RADIUS + MIN_CULLING_DIST,
+  ...EARTH_RESOLUTION
+);
+const cloudsMaterial = new Three.MeshStandardMaterial({
+  roughness: 1,
+  transparent: true,
+  alphaMap: cloudColorMap,
+});
+const cloudMesh = new Three.Mesh(cloudsGeometry, cloudsMaterial);
+cloudMesh.position.set(...EARTH_POSITION);
+scene.add(cloudMesh);
 
-let spotLight = new Three.SpotLight(0x1402cb, 2);
-scene.add(spotLight);
+/* LIGHTING */
+// let hemiLight = new Three.HemisphereLight(0xffeeb1, 0x080820, 4);
+// scene.add(hemiLight);
 
-let light = new Three.PointLight(0xffff, 1, 100);
+let spotLight = new Three.SpotLight(0xffeeb1, LIGHT_INTENSITY);
+let light = new Three.PointLight(0xffff, 10, 10);
 light.position.set(10, 10, 10);
-scene.add(light);
+scene.add(spotLight, light);
 
 // camera
 let camera = new Three.PerspectiveCamera(45, ASPECT.x / ASPECT.y);
@@ -36,18 +71,18 @@ scene.add(camera);
 let canvas = document.getElementById("webgl");
 let renderer = new Three.WebGLRenderer({ canvas });
 renderer.toneMapping = Three.ReinhardToneMapping;
-renderer.toneMappingExposure = 5;
+renderer.toneMappingExposure = 2.5;
 renderer.setSize(ASPECT.x, ASPECT.y);
-renderer.setPixelRatio(2);
+renderer.setPixelRatio(window.devicePixelRatio);
 renderer.render(scene, camera);
 
 /* Creating a new instance of the OrbitControls class, which is a class that allows the user to control
 the camera with the mouse. */
 let controls = new OrbitControls(camera, canvas);
 controls.enableDamping = true;
-controls.enablePan = false;
-controls.enableZoom = false;
-controls.autoRotate = 100;
+controls.enablePan = IS_PANNING;
+controls.enableZoom = IS_ZOOMING;
+controls.autoRotate = 20;
 
 /* updating the aspect ratio of the camera when the window is resized. */
 window.addEventListener("resize", () => {
@@ -61,37 +96,13 @@ window.addEventListener("resize", () => {
 const animate = () => {
   controls.update();
   renderer.render(scene, camera);
+  const SPOTLIGHT_OFFSET = 5;
   spotLight.position.set(
-    camera.position.x + 10,
-    camera.position.y + 10,
-    camera.position.z + 10
+    camera.position.x + SPOTLIGHT_OFFSET,
+    camera.position.y + SPOTLIGHT_OFFSET,
+    camera.position.z + SPOTLIGHT_OFFSET
   );
   window.requestAnimationFrame(animate);
 };
 
-animate(scene, camera);
-
-let rgb = [];
-let mouseDown = false;
-window.addEventListener("mousedown", () => {
-  mouseDown = true;
-});
-window.addEventListener("mouseup", () => {
-  mouseDown = false;
-});
-
-window.addEventListener("mousemove", (event) => {
-  if (mouseDown) {
-    rgb = [
-      Math.round((event.pageX / ASPECT.x) * 255),
-      Math.round((event.pageY / ASPECT.y) * 255),
-      225,
-    ];
-    let newColor = new Three.Color(`rgb(${rgb.join(",")})`);
-    gsap.to(mesh.material.color, {
-      r: newColor.r,
-      g: newColor.g,
-      b: newColor.b,
-    });
-  }
-});
+animate();
