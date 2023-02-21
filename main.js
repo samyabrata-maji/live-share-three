@@ -19,10 +19,10 @@ const LIGHT_INTENSITY = 4;
 const scene = new Three.Scene();
 
 const textureLoader = new Three.TextureLoader();
-const earthColorMap = textureLoader.load("./textures/earth3.jpg");
+const earthColorMap = textureLoader.load("textures/earth3.jpg");
 const earthNormalMap = textureLoader.load("./textures/earth_normal.tif");
 const earthSpecMap = textureLoader.load("./textures/earth_spec.tif");
-const cloudColorMap = textureLoader.load("./textures/earth_clouds.jpg");
+const cloudColorMap = textureLoader.load("textures/earth_clouds.jpg");
 
 const sphereGeometry = new Three.SphereGeometry(
   EARTH_RADIUS,
